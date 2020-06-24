@@ -1,0 +1,43 @@
+{
+  "name": "logger",
+  "version": "0.0.1",
+  "description": "Custom Logger for User Study",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension",
+    "widgets"
+  ],
+  "files": [
+    "webpack.config.js",
+    "tsconfig.json",
+    "logger/*.py",
+    "logger/nbextension/static/*",
+    "*.py",
+    "src/*.js",
+    "dist/*.js",
+    "css/*.css"
+  ],
+  "license": "Apache License",
+  "author": {
+    "name": "Doris Jung-Lin Lee",
+    "email": "dorisjunglinlee@gmail.com"
+  },
+  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lux-org/lux-widget"
+  },
+  "scripts": {
+    "postinstall": "jupyter nbextension install --sys-prefix --symlink --overwrite --py logger && jupyter nbextension enable --sys-prefix --py logger",
+    "build": "npm install"
+  },
+  "dependencies": {
+    "log4js": "^6.3.0",
+    "winston": "^3.3.3"
+  },
+  "jupyterlab": {
+    "extension": true
+  }
+}
