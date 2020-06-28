@@ -10,31 +10,7 @@ define([
     "use strict";
     function load_ipython_extension() {
       console.log("Loaded Logger")
-      // var logger = log.getLogger("lux")
-      // logger.info("test")
-      // './log4js/types/log4js'
-      // log.warn("dangerously convenient");
-      // var log4js = require("../../node_modules/log4js");
-      // var log4js = require("log4js");
-      // var logger = log4js.getLogger();
-      // logger.debug("Some debug messages");
-      // var winston = requirejs('winston');
-      // const logger = winston.createLogger({
-      //   level: 'info',
-      //   format: winston.format.json(),
-      //   defaultMeta: { service: 'user-service' },
-      //   transports: [
-      //     //
-      //     // - Write all logs with level `error` and below to `error.log`
-      //     // - Write all logs with level `info` and below to `combined.log`
-      //     //
-      //     new winston.transports.File({ filename: 'error.log', level: 'error' }),
-      //     new winston.transports.File({ filename: 'combined.log' }),
-      //   ],
-      // });
-
       let lastSaved = null;
-
       function addLogEntry(newItem) {
         if (Jupyter.notebook.metadata.hasOwnProperty('history')) {
           Jupyter.notebook.metadata.history.push(newItem);
@@ -50,15 +26,25 @@ define([
       // Logging UI interaction events
       document.addEventListener("LOG", function(event){
           console.log("captured event:",event);
-          const type = "interaction";
-          const eventMsg = event.detail;
-          var execution_count = event.currentTarget.activeElement.getElementsByClassName("prompt input_prompt")[0].innerHTML.match(/\[[0-9]+\]/)[0].replace(/[^0-9]/g,'')
-          if (execution_count!=""){ execution_count = parseInt(execution_count)}
+          const type = event.detail.action;
+          const param = event.detail.param;
+          var execution_count = ""
+          var inputField =  event.currentTarget.activeElement.getElementsByClassName("prompt input_prompt")
+          if (inputField || inputField.length>0){
+            inputField = inputField[0].innerHTML
+
+            if (inputField!="" && execution_count!=""){ 
+              inputField = inputField.match(/\[[0-9]+\]/)[0].replace(/[^0-9]/g,'')
+              execution_count = parseInt(inputField)
+            }
+          }
+          
+          const time = new Date();
           addLogEntry({
               type,
               time,
-              eventMsg,
-              execution_count,
+              param,
+              execution_count
           })
       });
       Jupyter.notebook.events.on("execute.CodeCell", function(event, data) {
