@@ -1,5 +1,9 @@
 # Information about Logging Codes
 
+The logger captures two different classes of events. One is UI events from Lux, another is events from the Jupyter notebook environment.
+
+### UI Events
+
 The logged [CustomEvents](https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/CustomEvent) are dispatched from the [Lux Jupyter widget](https://github.com/lux-org/lux-widget) frontend. This logger extension contains a listener that detects these LOG events. These LOG event contain a JSON in the field `detail` with two subfields: 
 - `action`: string name of the event action
 - `param`: Other relevant parameters
@@ -13,6 +17,18 @@ The events captured in Lux widget includes:
     - `param`: Title of tab that user has switched to (i.e., name of the action)
 - `clickVis`/`unclickVis`: Selecting or de-selecting a single visualization through clicking
     - `param`: Index of the visualization selected or de-selected (starting from 0)
+
+### Jupyter Events
+
+A list of all Javascript events from Jupyter is listed [here](https://jupyter.readthedocs.io/en/latest/development_guide/js_events.html#kernel_restartingkernel), it can also be accessed via `IPython.events`.
+
+- `editMarkdownCell`/`editCodeCell`: Records when user edits a cell, via the event `edit_mode.Cell`.
+- `deleteMarkdownCell`/`deleteCodeCell`: Records when the user deletes a code or markdown cell, via the event `delete.Cell`.
+- `executeCodeCell`: Records when user executes a code cell, via the event `execute.CodeCell`.
+- `completeCodeCell`: Records when the executed code cell is finished with execution, via the event `finished_execute.CodeCell`.
+- `kernelReady`: Records when the IPython kernel is ready, usually indicating the start of a new session (either opening a new session or reopening of the page), via the `kernel_ready.Kernel` event.
+- `kernelRestart`: Records when the IPython kernel restarts, via the `kernel_restarting.Kernel` event.
+- `kernelKilled`: Records when the IPython kernel is killed, via the `kernel_killed.Session` and `kernel_killed.Kernel` event.
 
 Not yet added:
 - Toggle between Lux and Pandas view

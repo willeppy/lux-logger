@@ -1,17 +1,14 @@
-// define([
-//   'base/js/namespace'
-// ], function (Jupyter) {
 define([
-    'require',
     'base/js/namespace',
-    'jquery',
-    './loglevel'
-  ], function (requirejs,Jupyter,jQuery, log) {
+    'jquery'
+  ], function (Jupyter,jQuery) {
     "use strict";
+    Jupyter.notebook.autosave_interval = 60000 // shorten auto-save interval
     function load_ipython_extension() {
       console.log("Loaded Logger")
       let lastSaved = null;
       function addLogEntry(newItem) {
+        console.log("addLogEntry:",newItem)
         if (Jupyter.notebook.metadata.hasOwnProperty('history')) {
           Jupyter.notebook.metadata.history.push(newItem);
         } else {
@@ -25,12 +22,11 @@ define([
       }
       // Logging UI interaction events
       document.addEventListener("LOG", function(event){
-          console.log("captured event:",event);
           const type = event.detail.action;
           const param = event.detail.param;
           var execution_count = ""
           var inputField =  event.currentTarget.activeElement.getElementsByClassName("prompt input_prompt")
-          if (inputField || inputField.length>0){
+          if (inputField.length>0){
             inputField = inputField[0].innerHTML
 
             if (inputField!="" && execution_count!=""){ 
@@ -47,13 +43,34 @@ define([
               execution_count
           })
       });
+      Jupyter.notebook.events.on("edit_mode.Cell", function(event, data) {
+        const code = data.cell.get_text();
+        const id = data.cell.cell_id;
+        const order_count = Jupyter.notebook.find_cell_index(data.cell);
+        const time = new Date();
+        if (data.cell.cell_type == "markdown"){
+          var cellType = "editMarkdownCell";
+        }else if (data.cell.cell_type == "code"){
+          var cellType = "editCodeCell";
+        }
+        const type = cellType
+
+        addLogEntry({
+            type,
+            time,
+            code,
+            id,
+            order_count
+        })
+      });
+      // Code cell executed
       Jupyter.notebook.events.on("execute.CodeCell", function(event, data) {
         const code = data.cell.get_text();
         // get cell id
         const id = data.cell.cell_id;
         const order_count = Jupyter.notebook.find_cell_index(data.cell);
         const time = new Date();
-        const type = "runCodeCell";
+        const type = "executeCodeCell";
         addLogEntry({
             type,
             time,
@@ -62,43 +79,9 @@ define([
             order_count
         })
       });
-
-      Jupyter.notebook.events.on("kernel_restarting.Kernel", function(event, data) {
-        const time = new Date();
-        const type = "kernelRestart";
-        addLogEntry({
-            type,
-            time
-        })
-      });
-
-      Jupyter.notebook.events.on("delete.CodeCell", function(event, data) {
-        const code = data.cell.get_text();
-        // get cell id
-        const id = data.cell.cell_id;
-        const order_count = Jupyter.notebook.find_cell_index(data.cell);
-        const time = new Date();
-        const type = "deleteCodeCell";
-        addLogEntry({
-            type,
-            time,
-            code,
-            id,
-            order_count
-        })
-      });
-  
-      window.onbeforeunload = function() {
-        Jupyter.notebook.save_notebook(); // force save notebook before page/tab close
-        const time = new Date();
-        const type = "pageClose";
-        addLogEntry({
-            type,
-            time
-        })
-      }
+      // Code cell execution completed
       Jupyter.notebook.events.on("finished_execute.CodeCell", function(event, data) {
-        const type = "completion";
+        const type = "completeCodeCell";
         const id = data.cell.cell_id;
         const time = new Date();
         var renderHTMLoutput = data.cell.output_area.selector[0].getElementsByClassName("output_subarea output_html rendered_html")
@@ -112,6 +95,76 @@ define([
           id,
           isPrintDataFrame
         });
+      });
+      // Detect Kernel started event
+      Jupyter.notebook.events.on("kernel_ready.Kernel", function(event, data) {
+        const time = new Date();
+        const type = "kernelReady";
+        addLogEntry({
+            type,
+            time
+        })
+      });
+      // Detect Kernel restarted event
+      Jupyter.notebook.events.on("kernel_restarting.Kernel", function(event, data) {
+        const time = new Date();
+        const type = "kernelRestart";
+        addLogEntry({
+            type,
+            time
+        })
+      });
+      // Deletion of any cell
+      Jupyter.notebook.events.on("delete.Cell", function(event, data) {
+        const code = data.cell.get_text();
+        // get cell id
+        const id = data.cell.cell_id;
+        const order_count = Jupyter.notebook.find_cell_index(data.cell);
+        const time = new Date();
+        if (data.cell.cell_type == "markdown"){
+          var cellType = "deleteMarkdownCell";
+        }else if (data.cell.cell_type == "code"){
+          var cellType = "deleteCodeCell";
+        }
+        const type = cellType
+        addLogEntry({
+            type,
+            time,
+            code,
+            id,
+            order_count
+        })
+      });
+      
+      // Force save notebook before page/tab close
+      window.onbeforeunload = function() {
+        Jupyter.notebook.save_notebook(); 
+        const time = new Date();
+        const type = "pageClose";
+        addLogEntry({
+            type,
+            time
+        })
+      }
+
+      // Force save notebook before kernel killed either via kernel or session
+      Jupyter.notebook.events.on("kernel_killed.Kernel", function(event, data) {
+        Jupyter.notebook.save_notebook(); 
+        const time = new Date();
+        const type = "kernelKilled";
+        addLogEntry({
+            type,
+            time
+        })
+      });
+      Jupyter.notebook.events.on("kernel_killed.Session", function(event, data) {
+        Jupyter.notebook.save_notebook(); 
+        const time = new Date();
+        const type = "kernelKilled";
+        addLogEntry({
+            type,
+            time
+        })
       });
     }
 
