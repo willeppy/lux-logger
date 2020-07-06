@@ -17,7 +17,8 @@ The events captured in Lux widget includes:
     - `param`: Title of tab that user has switched to (i.e., name of the action)
 - `clickVis`/`unclickVis`: Selecting or de-selecting a single visualization through clicking
     - `param`: Index of the visualization selected or de-selected (starting from 0)
-
+- `startScroll/stopScroll` : Start and stop events for scrolling through the recommendation chart gallery
+    - `param`: Title of tab that user is scrolling through (i.e., name of the action)
 ### Jupyter Events
 
 A list of all Javascript events from Jupyter is listed [here](https://jupyter.readthedocs.io/en/latest/development_guide/js_events.html#kernel_restartingkernel), it can also be accessed via `IPython.events`.
