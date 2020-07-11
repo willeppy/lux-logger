@@ -16,17 +16,26 @@ The events captured in Lux widget includes:
 - `switchTab`: Click on tab to switch to a different tab
     - `param`: Title of tab that user has switched to (i.e., name of the action)
 - `clickVis`/`unclickVis`: Selecting or de-selecting a single visualization through clicking
-    - `param`: Index of the visualization selected or de-selected (starting from 0)
+    - `param`: 
+        - `index` of the visualization selected or de-selected (starting from 0), 
+        - `tableTitle`: Title of tab that user is currently on
+        - `vis`: Vega-Lite specification (with data) of selected vis
+    - Note that the `exportBtnClick` can access the `clickVis`/`unclickVis` vis information.
 - `startScroll/stopScroll` : Start and stop events for scrolling through the recommendation chart gallery
     - `param`: Title of tab that user is scrolling through (i.e., name of the action)
+- `toggleBtnClick`: Toggle Button for switching between Pandas/Lux is clicked
+    - `param`: View type that user is switching to.
 ### Jupyter Events
 
-A list of all Javascript events from Jupyter is listed [here](https://jupyter.readthedocs.io/en/latest/development_guide/js_events.html#kernel_restartingkernel), it can also be accessed via `IPython.events`.
+A list of all Javascript events from Jupyter is listed [here](https://jupyter.readthedocs.io/en/latest/development_guide/js_events.html), it can also be accessed via `IPython.events`.
 
 - `editMarkdownCell`/`editCodeCell`: Records when user edits a cell, via the event `edit_mode.Cell`.
+- `selectMarkdownCell`/`selectCodeCell`: Records when user selected or is interacting with a Cell, via the event `command_mode.Cell`.
 - `deleteMarkdownCell`/`deleteCodeCell`: Records when the user deletes a code or markdown cell, via the event `delete.Cell`.
 - `executeCodeCell`: Records when user executes a code cell, via the event `execute.CodeCell`.
 - `completeCodeCell`: Records when the executed code cell is finished with execution, via the event `finished_execute.CodeCell`.
+    - `isPrintPandasDf`/`isPrintLuxDf`: captures whether the printed dataframe is displayed as Pandas or a Lux widget or neither.
+    - `isPrintView`/`isPrintViewCollection`: captures whether a View or View Collection is printed.
 - `kernelReady`: Records when the IPython kernel is ready, usually indicating the start of a new session (either opening a new session or reopening of the page), via the `kernel_ready.Kernel` event.
 - `kernelRestart`: Records when the IPython kernel restarts, via the `kernel_restarting.Kernel` event.
 - `kernelKilled`: Records when the IPython kernel is killed, via the `kernel_killed.Session` and `kernel_killed.Kernel` event.
