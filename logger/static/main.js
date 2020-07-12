@@ -104,16 +104,23 @@ define([
         })
       });
       // Code cell execution completed
+      // 
       Jupyter.notebook.events.on("finished_execute.CodeCell", function(event, data) {
+        // Jupyter.notebook.events.on("finished_iopub.Kernel", function(event2, data2) {
         const type = "completeCodeCell";
         const id = data.cell.cell_id;
         const time = new Date();
-        var renderHTMLoutput = data.cell.output_area.selector[0].getElementsByClassName("output_subarea output_html rendered_html")
-        var isPrintPandas = false
-        var isPrintLuxWidget = false
+        
+        var renderHTMLoutput = data.cell.output_area.selector[0].getElementsByClassName("output_subarea jupyter-widgets-view")
+        var isPrintPandasDf = false
+        var isPrintLuxDf = false
         if (renderHTMLoutput.length>0){
-          isPrintPandas = renderHTMLoutput[0].getElementsByClassName("dataframe").length>0
-          isPrintLuxWidget = renderHTMLoutput[0].getElementsByTagName("#widgetContainer").length>0
+          // isPrintLuxDf = renderHTMLoutput[0].getElementsByTagName("#widgetContainer").length>0
+          isPrintLuxDf = renderHTMLoutput.length==3 // Heuristic: Not completed rendering yet
+        }
+        var renderHTMLoutput = data.cell.output_area.selector[0].getElementsByClassName("output_subarea output_html rendered_html")
+        if (renderHTMLoutput.length>0){
+          isPrintPandasDf = renderHTMLoutput[0].getElementsByClassName("dataframe").length>0
         }
         // While View and View Collections are rendered as LuxWidget, this is not rendered until after event is over, unlike the widget only case when df is printed
         // So the detection needs to be done separately.
@@ -133,6 +140,7 @@ define([
           isPrintView,
           isPrintViewCollection
         });
+        // })
       });
       // Detect Kernel started event
       Jupyter.notebook.events.on("kernel_ready.Kernel", function(event, data) {
