@@ -7,10 +7,27 @@ The extension logs all UI interactions from Lux, as well as events in Jupyter, s
 
 ## Installation
 
-To install the logger, run the following command at the root level:
+To install the logger, run the following command:
 
 ```bash
+git clone https://github.com/lux-org/logger.git
+cd logger
 pip install .
 jupyter nbextension install --symlink logger
 jupyter nbextension enable logger/static/main
 ```
+If you are using virtual environments, note that you should do this in the virtual environment where you will be using Lux.
+
+After the installation has completed you should see a green OK to indicate that the nbextension is activated
+
+<img src="https://i.imgur.com/fyGzG6M.png" width="450"/>
+
+To uninstall the logger, run the following commands: 
+
+```bash
+jupyter nbextension uninstall logger
+jupyter nbextension disable logger/static/main
+```
+
+
+
