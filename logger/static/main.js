@@ -108,7 +108,9 @@ define([
       Jupyter.notebook.events.on("finished_execute.CodeCell", function(event, data) {
         // Jupyter.notebook.events.on("finished_iopub.Kernel", function(event2, data2) {
         const type = "completeCodeCell";
+        const code = data.cell.get_text();
         const id = data.cell.cell_id;
+        const order_count = Jupyter.notebook.find_cell_index(data.cell);
         const time = new Date();
         
         var renderHTMLoutput = data.cell.output_area.selector[0].getElementsByClassName("output_subarea jupyter-widgets-view")
@@ -134,11 +136,13 @@ define([
         addLogEntry({
           type,
           time,
+          code,
           id,
           isPrintPandasDf,
           isPrintLuxDf,
           isPrintView,
-          isPrintViewCollection
+          isPrintViewCollection,
+          order_count
         });
         // })
       });
