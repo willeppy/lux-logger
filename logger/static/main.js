@@ -124,14 +124,14 @@ define([
         if (renderHTMLoutput.length>0){
           isPrintPandasDf = renderHTMLoutput[0].getElementsByClassName("dataframe").length>0
         }
-        // While View and View Collections are rendered as LuxWidget, this is not rendered until after event is over, unlike the widget only case when df is printed
+        // While Vis and Vis Collections are rendered as LuxWidget, this is not rendered until after event is over, unlike the widget only case when df is printed
         // So the detection needs to be done separately.
-        var isPrintView = false
-        var isPrintViewCollection = false
+        var isPrintVis = false
+        var isPrintVisCollection = false
         var renderTEXToutput = data.cell.output_area.selector[0].getElementsByClassName("output_subarea output_text output_result")
         if (renderTEXToutput.length>0){
-          isPrintView = renderTEXToutput[0].innerText.indexOf("View ")>-1
-          isPrintViewCollection = renderTEXToutput[0].innerText.indexOf("ViewCollection ")>-1
+          isPrintVis = renderTEXToutput[0].innerText.indexOf("Vis ")>-1
+          isPrintVisCollection = renderTEXToutput[0].innerText.indexOf("VisList ")>-1
         }
         addLogEntry({
           type,
@@ -140,8 +140,8 @@ define([
           id,
           isPrintPandasDf,
           isPrintLuxDf,
-          isPrintView,
-          isPrintViewCollection,
+          isPrintVis,
+          isPrintVisCollection,
           order_count
         });
         // })

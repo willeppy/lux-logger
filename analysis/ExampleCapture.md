@@ -1,9 +1,3 @@
-capture high-level user actions
-capture provenance of all events
-intermediate user actions
-critical that each time a query is logged, it is possible to unambiguously recover this origination or application context info
-
-
 Ground Truth (CarsDemo.ipynb)
 
 - Execute linearly until Cell 4
@@ -27,11 +21,11 @@ Ground Truth (CarsDemo.ipynb)
     - unclick color by Cylinders
     - exported a single viz
 - Cell 9: 
-    - Print out single View
+    - Print out single Vis
 - Re-execute Cell 10~11
-- Edit change `df.set_context([lux.Spec(attribute = "Cylinders")])` to `df.set_context([lux.Spec(attribute = "Origin")])` (edit time about 10 seconds)
+- Edit change `df.set_intent([lux.Clause(attribute = "Cylinders")])` to `df.set_intent([lux.Clause(attribute = "Origin")])` (edit time about 10 seconds)
 - Click on:
     - Origin v.s. Displacement bar chart 
     - Origin v.s. Horsepower bar chart 
     - Export Button
-- Typed `df.get_exported()` in subsequent cell to print out ViewCollection
+- Typed `df.get_exported()` in subsequent cell to print out VisList
