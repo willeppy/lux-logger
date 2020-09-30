@@ -1,16 +1,16 @@
 Ground Truth (CarsDemo.ipynb)
 
-- Execute linearly until Cell 4
-- Cell 4: 
+- Execute linearly until Cell 3
+- Cell 3: 
     - Toggle to Lux
     - Click on different tabs
-    - Stayed on Category tab
+    - Stayed on Occurance tab
     - Go back to Correlation Tab, scroll through (scrolling about 10 seconds)
     - Go back to Distribution Tab, scroll through (scrolling about 3 seconds)
-- Cell 5: set default display as Lux
-- Cell 6: 
+- Cell 4: set default display as Lux
+- Cell 5: 
     - display `df` Lux view
-- Cell 7: 
+- Cell 6: 
     - default Lux view
     - Click on Filter, Generalize
     - Scroll through Enhance (about 10 seconds)
@@ -20,12 +20,18 @@ Ground Truth (CarsDemo.ipynb)
     - Click on two vis : color by Origin, color by Cyclinders
     - unclick color by Cylinders
     - exported a single viz
-- Cell 9: 
+- Run Cells 7-8: 
     - Print out single Vis
-- Re-execute Cell 10~11
-- Edit change `df.set_intent([lux.Clause(attribute = "Cylinders")])` to `df.set_intent([lux.Clause(attribute = "Origin")])` (edit time about 10 seconds)
+- Run Cells 9-10
+- Click on:
+    - Cylinders v.s. Displacement bar chart 
+    - Cylinders v.s. Horsepower bar chart 
+    - Export Button
+- Typed `df.exported` in subsequent cell to print out VisList
+- Re-execute Cell 9-10
+- Edit change `df.intent=["Cylinders"]` to `df.intent=["Origin"]` (edit time about 10 seconds)
 - Click on:
     - Origin v.s. Displacement bar chart 
     - Origin v.s. Horsepower bar chart 
     - Export Button
-- Typed `df.get_exported()` in subsequent cell to print out VisList
+- Typed `df.exported` in subsequent cell to print out VisList
