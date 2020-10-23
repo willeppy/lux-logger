@@ -9,11 +9,11 @@ http.createServer(function (req, res) {
     body += chunk;
   });
   req.on('end', function () {
-    console.log('POSTed: ' + body);
     if (body) {
-      parsed = JSON.parse(body);
-      console.log(parsed['id']);
-      var id = parsed['id'];
+      const { headers } = req;
+      var id = headers['id'];
+      console.log('ID: ' + id);
+      console.log('BODY: ' + body);
       var writeStream = fs.createWriteStream('./logs/' + id + '.json', {flags:'a'});
       writeStream.write(body);
     }
@@ -26,4 +26,3 @@ http.createServer(function (req, res) {
     res.end(postHTML);
   });
 }).listen(8083);
-
