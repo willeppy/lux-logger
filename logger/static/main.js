@@ -15,7 +15,7 @@ define([
       let lastSaved = null;
       function sendLog() {
         // make JSON
-        var data = {"history": log};
+        var data = {"nbName": Jupyter.notebook.notebook_name, "history": log};
         var jsonData = JSON.stringify(data, null, 2);
 
         // Send data
@@ -25,7 +25,8 @@ define([
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader("ID", logID);
         xhr.send(jsonData);
-        console.log(jsonData);
+        console.log("sent logID:", logID);
+        console.log("sent data:", jsonData);
         log = [];
       }
       function addLogEntry(newItem) {
@@ -117,14 +118,11 @@ define([
           var cleaned = lines[line].split("#")[0];
           cleaned = cleaned.replace(/\s+/g, '');
           cleaned = cleaned.toLowerCase();
-          console.log(cleaned);
-          if (cleaned.includes("logging=true")) {
+          if (cleaned.includes("lux.logger=true")) {
             loggingEnabled = true;
-            console.log("BOOLEAN = TRUE");
           }
-          if (cleaned.includes("logging=false")) {
+          if (cleaned.includes("lux.logger=false")) {
             loggingEnabled = false;
-            console.log("BOOLEAN = FALSE");
           }
         }
         // get cell id
