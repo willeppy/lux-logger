@@ -3,8 +3,7 @@ define([
     'jquery'
   ], function (Jupyter,$) {
     "use strict";
-    // Note: This variable seems to be useless as the interval gets overwritten somewhere else
-    // Jupyter.notebook.autosave_interval = 600 // shorten auto-save interval
+
     function load_ipython_extension() {
     
       var log = [];
@@ -16,31 +15,24 @@ define([
       let lastSaved = null;
       function sendLog() {
         // make JSON
-        var data = {"id": logID, "history": log};
+        var data = {"history": log};
         var jsonData = JSON.stringify(data, null, 2);
 
         // Send data
         var xhr = new XMLHttpRequest(); 
-        var url = 'http://freddie.millennium.berkeley.edu:8888';
+        var url = 'http://freddie.millennium.berkeley.edu:8900';
         xhr.open("POST", url); 
         xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("ID", logID);
         xhr.send(jsonData);
-        // Jupyter.notebook.metadata.history = [];
         console.log(jsonData);
         log = [];
       }
       function addLogEntry(newItem) {
         if (loggingEnabled) {
           console.log("addLogEntry:",newItem)
-          // if (Jupyter.notebook.metadata.hasOwnProperty('history')) {
-          //   Jupyter.notebook.metadata.history.push(newItem);
-          // } else {
-          //   Jupyter.notebook.metadata.history = [newItem];
-          // }
           log.push(newItem);
-          // could use auto-save interval here if does not get overwritten
           if (!lastSaved || (Date.now() - lastSaved) > 6000) { 
-            // Jupyter.notebook.save_notebook();
             sendLog();
             lastSaved = Date.now();
           }
