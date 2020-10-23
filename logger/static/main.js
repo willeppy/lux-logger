@@ -3,21 +3,39 @@ define([
     'jquery'
   ], function (Jupyter,$) {
     "use strict";
-    Jupyter.notebook.autosave_interval = 60000 // shorten auto-save interval
+
     function load_ipython_extension() {
+    
+      var log = [];
+      var loggingEnabled = false;
       console.log("Loaded Logger")
+      var log = [];
+      var logID = '_' + Math.random().toString(36).substr(2, 9);
+
       let lastSaved = null;
+      function sendLog() {
+        // make JSON
+        var data = {"history": log};
+        var jsonData = JSON.stringify(data, null, 2);
+
+        // Send data
+        var xhr = new XMLHttpRequest(); 
+        var url = 'http://freddie.millennium.berkeley.edu:8900';
+        xhr.open("POST", url); 
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.setRequestHeader("ID", logID);
+        xhr.send(jsonData);
+        console.log(jsonData);
+        log = [];
+      }
       function addLogEntry(newItem) {
-        console.log("addLogEntry:",newItem)
-        if (Jupyter.notebook.metadata.hasOwnProperty('history')) {
-          Jupyter.notebook.metadata.history.push(newItem);
-        } else {
-          Jupyter.notebook.metadata.history = [newItem];
-        }
-        // only save every 1 min
-        if (((lastSaved) && ((Date.now() - lastSaved) > 60000)) || (!lastSaved)) {
-          Jupyter.notebook.save_notebook();
-          lastSaved = Date.now();
+        if (loggingEnabled) {
+          console.log("addLogEntry:",newItem)
+          log.push(newItem);
+          if (!lastSaved || (Date.now() - lastSaved) > 6000) { 
+            sendLog();
+            lastSaved = Date.now();
+          }
         }
       }
       // Logging UI interaction events
@@ -90,6 +108,25 @@ define([
       // Code cell executed
       Jupyter.notebook.events.on("execute.CodeCell", function(event, data) {
         const code = data.cell.get_text();
+
+        // Code to enable or disable logger
+        // TODO: ultimately need to perhaps display some output showing logging is enable/disabled
+        var lines = code.split(/\r?\n/);
+        var line;
+        for (line in lines) {
+          var cleaned = lines[line].split("#")[0];
+          cleaned = cleaned.replace(/\s+/g, '');
+          cleaned = cleaned.toLowerCase();
+          console.log(cleaned);
+          if (cleaned.includes("logging=true")) {
+            loggingEnabled = true;
+            console.log("BOOLEAN = TRUE");
+          }
+          if (cleaned.includes("logging=false")) {
+            loggingEnabled = false;
+            console.log("BOOLEAN = FALSE");
+          }
+        }
         // get cell id
         const id = data.cell.cell_id;
         const order_count = Jupyter.notebook.find_cell_index(data.cell);
