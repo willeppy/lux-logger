@@ -11,7 +11,7 @@ http.createServer(function (req, res) {
   req.on('end', function () {
     if (body) {
       const { headers } = req;
-      var id = headers['id'];
+      var id = headers['id'] + req.connection.remoteAddress;
       console.log('ID: ' + id);
       console.log('BODY: ' + body);
       var writeStream = fs.createWriteStream('./logs/' + id + '.json', {flags:'a'});
