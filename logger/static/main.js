@@ -20,7 +20,7 @@ define([
 
         // Send data
         var xhr = new XMLHttpRequest(); 
-        var url = 'https://freddie.millennium.berkeley.edu:8900';
+        var url = 'https://freddie.millennium.berkeley.edu:8901';
         xhr.open("POST", url); 
         xhr.setRequestHeader("Content-Type", "application/json");
         xhr.setRequestHeader("ID", logID);
