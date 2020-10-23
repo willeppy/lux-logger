@@ -10,7 +10,7 @@ from os.path import join as pjoin
 
 
 from setupbase import (
-    create_cmdclass, install_npm, ensure_targets,
+    install_npm, ensure_targets,
     find_packages, combine_commands, ensure_python,
     get_version, HERE
 )
@@ -43,11 +43,6 @@ data_files_spec = [
 ]
 
 
-cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
-    data_files_spec=data_files_spec)
-cmdclass['jsdeps'] = combine_commands(
-    install_npm(HERE, build_cmd='build')
-)
 
 
 setup_args = dict(
@@ -55,7 +50,6 @@ setup_args = dict(
     description     = 'Custom Logger for User Study',
     version         = version,
     scripts         = glob(pjoin('scripts', '*')),
-    cmdclass        = cmdclass,
     packages        = find_packages(),
     author          = 'Doris Lee',
     author_email    = 'dorisjunglinlee@gmail.com',
