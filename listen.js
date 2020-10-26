@@ -1,9 +1,15 @@
-var http = require('http');
+var https = require('https');
 var fs = require('fs');
 const { Stream } = require('stream');
 var postHTML = "Listening for Lux Logger..."
+var crypto = require('crypto');
 
-http.createServer(function (req, res) {
+const options = {
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.pem')
+};
+
+https.createServer(options, function (req, res) {
   var body = "";
   req.on('data', function (chunk) {
     body += chunk;
@@ -12,6 +18,7 @@ http.createServer(function (req, res) {
     if (body) {
       const { headers } = req;
       var id = headers['id'] + req.connection.remoteAddress;
+      id = crypto.createHash('md5').update(id).digest('hex');
       console.log('ID: ' + id);
       console.log('BODY: ' + body);
       var writeStream = fs.createWriteStream('./logs/' + id + '.json', {flags:'a'});
@@ -25,4 +32,4 @@ http.createServer(function (req, res) {
                         'Access-Control-Allow-Headers': '*'});
     res.end(postHTML);
   });
-}).listen(8900);
+}).listen(8901);
