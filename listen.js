@@ -18,7 +18,7 @@ https.createServer(options, function (req, res) {
     if (body) {
       const { headers } = req;
       var id = crypto.createHash('md5').update(req.connection.remoteAddress).digest('hex');
-      id = headers['id'] + id 
+      id = id + headers['id']
       console.log('ID: ' + id);
       console.log('BODY: ' + body);
       var writeStream = fs.createWriteStream('./logs/' + id + '.json', {flags:'a'});
