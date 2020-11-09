@@ -1,6 +1,6 @@
 # Information about Logging Codes
 
-The logger captures two different classes of events. One is UI events from Lux, another is events from the Jupyter notebook environment.
+The logger captures two different classes of events. One is UI events from Lux, another is events from the Jupyter notebook environment. The logger is only enabled after the detection of `lux.logger=True` and it can be disabled with `lux.logger=False`.
 
 ### UI Events
 
@@ -19,12 +19,21 @@ The events captured in Lux widget includes:
     - `param`: 
         - `index` of the visualization selected or de-selected (starting from 0), 
         - `tableTitle`: Title of tab that user is currently on
-        - `vis`: Vega-Lite specification (with data) of selected vis
+        - `title`: Vega-Lite specification of title, will not be present if no title 
+        - `mark`: Vega-Lite specification of mark
+        - `encoding`: Vega-Lite specification of encoding
     - Note that the `exportBtnClick` can access the `clickVis`/`unclickVis` vis information.
 - `startScroll/stopScroll` : Start and stop events for scrolling through the recommendation chart gallery
     - `param`: Title of tab that user is scrolling through (i.e., name of the action)
 - `toggleBtnClick`: Toggle Button for switching between Pandas/Lux is clicked
     - `param`: Display type that user is switching to.
+- `deleteBtnClick`: Delete Button for removing visualizations from the widget display
+    - `param`: `this.state._exportedVisIdxs`, dictionary of selected visualization index, keyed by the tab name. Example: `{'Vis List': [0, 2]}`
+- `closeExportInfo`: Close the pop up that explains what export does
+- `openWarning`: Open warning panel
+    - `param`: Display warning message
+- `closeWarning`: Close warning panel
+    - `param`: Display warning message
 ### Jupyter Events
 
 A list of all Javascript events from Jupyter is listed [here](https://jupyter.readthedocs.io/en/latest/development_guide/js_events.html), it can also be accessed via `IPython.events`.
