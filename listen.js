@@ -5,8 +5,8 @@ var postHTML = "Listening for Lux Logger..."
 var crypto = require('crypto');
 
 const options = {
-  key: fs.readFileSync('key.pem'),
-  cert: fs.readFileSync('cert.pem')
+  key: fs.readFileSync('/data/risecamp/pki/tls/private/freddie.millennium.berkeley.edu.key'),
+  cert: fs.readFileSync('../cert.pem')
 };
 
 https.createServer(options, function (req, res) {
@@ -21,7 +21,7 @@ https.createServer(options, function (req, res) {
       id = id + headers['id']
       console.log('ID: ' + id);
       console.log('BODY: ' + body);
-      var writeStream = fs.createWriteStream('./logs/' + id + '.json', {flags:'a'});
+      var writeStream = fs.createWriteStream('../logs/' + id + '.json', {flags:'a'});
       writeStream.write(body);
     }
 
@@ -33,3 +33,4 @@ https.createServer(options, function (req, res) {
     res.end(postHTML);
   });
 }).listen(8901);
+
