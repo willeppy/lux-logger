@@ -10,6 +10,7 @@ define([
     var loggingEnabled = false;
     console.log("Loaded Logger")
     var logID = '_' + Math.random().toString(36).substr(2, 9);
+    Jupyter.notebook.metadata["history"] = [];
 
     let lastSaved = null;
     // function sendLog() {
